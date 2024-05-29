@@ -22,8 +22,17 @@ export class TokensService {
         return (await this._db.query<IUserTokenDbRow>('select * from users_tokens where id = $1', [id])).rows[0] ?? undefined;
     }
     
-    async getAll(): Promise<IUserTokenDbRow[]> {
-        return (await this._db.query<IUserTokenDbRow>('select * from users_tokens')).rows;
+    async getAll(filter?: { userId: string }): Promise<IUserTokenDbRow[]> {
+        let conditions: string[] = [];
+        let params: any[] | undefined = [];
+        let sql: string = 'select * from users_tokens';
+        if (filter?.userId) conditions.push(`user_id = $${params.push(filter.userId)}`);
+        if (conditions.length){
+            sql += ` where ${conditions.join(' and ')}`;
+        } else {
+            params = undefined;
+        }
+        return (await this._db.query<IUserTokenDbRow>(sql, params)).rows;
     }
 
     async delete(id: string): Promise<boolean> {
