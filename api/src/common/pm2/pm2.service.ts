@@ -70,7 +70,7 @@ export class Pm2Service {
     
             process = this.getAll().find(x => x.name == processName);
             if (process){
-                app.status = process.pm2_env.status;
+                return process.pm2_env.status;
             }
         }
         throw new Error("No se ha definido el archivo de arranque");
