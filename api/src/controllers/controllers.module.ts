@@ -5,8 +5,9 @@ import { CliApplicationsController } from './cli-applications/cli-applications.c
 import { CliDeployController } from './cli-deploy/cli-deploy.controller';
 import { ProfileController } from './profile/profile.controller';
 import { ProfileTokensController } from './profile-tokens/profile-tokens.controller';
+import { UsersController } from './users/users.controller';
 
 @Module({
-  controllers: [AuthController, ApplicationsController, CliApplicationsController, CliDeployController, ProfileController, ProfileTokensController]
+  controllers: [AuthController, ApplicationsController, CliApplicationsController, CliDeployController, ProfileController, ProfileTokensController, UsersController]
 })
 export class ControllersModule {}
