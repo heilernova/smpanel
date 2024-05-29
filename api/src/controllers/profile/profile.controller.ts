@@ -26,7 +26,7 @@ export class ProfileController {
 
     @Patch()
     async update(@GetSession() session: Session, @Body() body: ProfileUpdateDto){
-        let { email, username } = await this._users.emailAndUsername(body.email, body.username);
+        let { email, username } = await this._users.emailAndUsername(body.email, body.username, session.id);
 
         if (!email || !username){
             let sms: string
