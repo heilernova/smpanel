@@ -1,8 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { ConnectionDbService } from './connection-db';
+import { Pm2Service } from './pm2/pm2.service';
 
 const services = [
-    ConnectionDbService
+    ConnectionDbService,
+    Pm2Service
 ]
 
 @Global()
