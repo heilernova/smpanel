@@ -66,4 +66,16 @@ export class ApplicationsController {
 
         return "online";
     }
+
+    @Post(':id/users')
+    @RequirePermissions(Permission.APP_ASSIGN_USERS)
+    async assignUser(@Param('id') id: string, @Body() body: any){
+        await this._apps.assignUser(id, body.user_id, body.permissions);
+    }
+
+    @Post(':id/users/:userId')
+    @RequirePermissions(Permission.APP_ASSIGN_USERS)
+    async deleteUser(@Param('id') id: string, @Param('userId') userId: string){
+        return await this._apps.removeUser(id, userId);
+    }
 }
