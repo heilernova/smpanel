@@ -49,4 +49,16 @@ export class UsersService {
     async delete(id: string): Promise<boolean> {
         return (await this._db.delete('users', ['id = $1', [id]])).rowCount == 1;
     }
+
+    async emailAndUsername(email: string, username: string, userId?: string): Promise<{ email: boolean, username: boolean }> {
+        let sql: string = 'select (select count(*) = 1 from users where email = lower($1)), (select count(*) = 1 from users where lower(username) = lower($1))';
+        if (userId){
+            'select (select count(*) = 1 from users where email = lower($1) and id <> $3), (select count(*) = 1 from users where lower(username) = lower($2) and id <> $3)';
+        }
+        const [emailValid, usernameValid] = (await this._db.query(sql, [email, username], true)).rows[0];
+        return {
+            email: emailValid,
+            username: usernameValid
+        }
+    }
 }
