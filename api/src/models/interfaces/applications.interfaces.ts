@@ -34,10 +34,7 @@ export interface IApplicationDbRow {
 
 export interface IApplicationCreate extends PartialBy<OmitBy<IApplicationDbRow, 'create_at' | 'update_at' | 'last_deploy_at'>, 'id' | 'version' | 'startup_file' | 'framework' | 'running_on' | 'runtime_environment' | 'url' | 'github' | 'env' | 'ignore' | 'observation'> {};
 export interface IApplicationUpdate extends Partial<OmitBy<IApplicationDbRow, 'id' | 'create_at'>> {};
-export interface IApplication extends IApplicationDbRow {
-    status: ApplicationStatus;
-    permissions: string[];
-};
+export interface IApplication extends IApplicationDbRow {};
 
 export interface IApplicationUsersDbRow {
     app_id: string;
