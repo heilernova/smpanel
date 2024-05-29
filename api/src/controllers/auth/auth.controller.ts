@@ -1,5 +1,5 @@
 import { IUser, UsersService } from '@app/models';
-import { TokensService } from '@app/models/services/tokens/tokens.service';
+import { TokensService } from '@app/models';
 import { Body, Controller, Headers, HttpException, Ip, Post } from '@nestjs/common';
 import { compareSync } from 'bcrypt';
 import { CredentialsDto } from './dto/credential.dto';
