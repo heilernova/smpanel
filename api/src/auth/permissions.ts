@@ -12,6 +12,7 @@ export enum Permission {
     APP_UPDATE = 'APP_UPDATE',
     APP_DELETE = 'APP_DELETE', 
     APP_DEPLOY = 'APP_DEPLOY', 
+    APP_ASSIGN_USERS = 'APP_ASSIGN_USERS', 
 }
 
 export const PERMISSION_KEY = 'appPermissions';
