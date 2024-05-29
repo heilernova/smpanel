@@ -46,4 +46,8 @@ export class ApplicationsService {
     async assignUser(appId: string, userId: string, permissions: string[]){
         await this._db.insert('apps_users', { user_id: userId, app_id: appId, permissions });
     }
+
+    async removeUser(appId: string, userId: string): Promise<boolean> {
+        return (await this._db.delete('apps_users', ['app_id = $1 and user_id = $2', [appId, userId]])).rowCount == 1;
+    }
 }
