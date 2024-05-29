@@ -21,6 +21,10 @@ export class ApplicationsService {
         let sql: string = 'select * from apps';
         return (await this._db.query<IApplicationDbRow>(sql)).rows;
     }
+    async getAllForUser(userId: string): Promise<IApplication[]> {
+        let sql: string = 'select a.* from apps a inner join apps_users b on a.id = b.user_id where b.id = $1';
+        return (await this._db.query<IApplicationDbRow>(sql, [userId])).rows;
+    }
 
     async update(id: string, value: IApplicationUpdate): Promise<boolean> {
         return (await this._db.update('apps', ['id = $1', [id]], value)).rowCount == 1;
@@ -28,5 +32,14 @@ export class ApplicationsService {
 
     async delete(id: string): Promise<boolean> {
         return (await this._db.delete('apps', ['id = $1', [id]])).rowCount == 0;
+    }
+
+    async nameValid(value: string, domain: string): Promise<boolean> {
+        let sql: string = 'select count(*) = 0 from apps where name = $1 and domain = $2';
+        return (await this._db.query<[boolean]>(sql, [value, domain], true)).rows[0][0];
+    }
+
+    async getPermission(appId: string, userId: string): Promise<string[]> {
+        return (await this._db.query<[string[]]>('select permissions from apps_users where app_id = $1 and user_id = $2', [appId, userId], true)).rows[0][0];
     }
 }
