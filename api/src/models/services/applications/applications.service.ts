@@ -42,4 +42,8 @@ export class ApplicationsService {
     async getPermission(appId: string, userId: string): Promise<string[]> {
         return (await this._db.query<[string[]]>('select permissions from apps_users where app_id = $1 and user_id = $2', [appId, userId], true)).rows[0][0];
     }
+
+    async assignUser(appId: string, userId: string, permissions: string[]){
+        await this._db.insert('apps_users', { user_id: userId, app_id: appId, permissions });
+    }
 }
