@@ -38,4 +38,8 @@ export class TokensService {
     async delete(id: string): Promise<boolean> {
         return (await this._db.delete('users_tokens', ['id = $1', [id]])).rowCount == 1;
     }
+
+    async deleteAll(userId: string, ignoreId: string): Promise<number> {
+        return (await this._db.delete('users_tokens', ['user_id = $1 and id <> $2', [userId, ignoreId]])).rowCount ?? 0;
+    }
 }
