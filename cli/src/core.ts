@@ -41,10 +41,10 @@ export const getApps = () => APP_CONFIG.apps;
 export const getCache = () => APP_CONFIG.cache;
 export const getServers = () => APP_CONFIG.servers;
 
-export const save = (values: { server?: IServer, cache?: { login?: { server: string, username: string } }, application?: IApplication }) => {
+export const save = (values: { server?: IServer, cache?: { login?: { server: string, username: string } }, application?: IApplication, deleteServer?: string; }) => {
 
     // Configuraciones globales
-    if (values.server || values.cache){
+    if (values.server || values.cache || values.deleteServer){
         let config: IConfigGlobal = {
             servers: APP_CONFIG.servers,
             cache: APP_CONFIG.cache
@@ -62,6 +62,13 @@ export const save = (values: { server?: IServer, cache?: { login?: { server: str
         if (values.cache){
             if (values.cache.login){
                 config.cache.login = values.cache.login;
+            }
+        }
+
+        if (values.deleteServer){
+            let index = config.servers.findIndex(x => x.url == values.deleteServer);
+            if (index > -1){
+                config.servers.splice(index, 1);
             }
         }
 
