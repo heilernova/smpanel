@@ -1,10 +1,11 @@
-import { GetSession, Permission, RequirePermissions, Session } from '@app/auth';
+import { AuthGuard, GetSession, Permission, RequirePermissions, Session } from '@app/auth';
 import { Pm2Service } from '@app/common/pm2';
 import { ApplicationsService, IApplication } from '@app/models';
-import { Body, Controller, Delete, Get, HttpException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AppCreateDto } from './dto/app-create.dto';
 import { AppUpdateDto } from './dto/app-update.dto';
 
+@UseGuards(AuthGuard)
 @Controller('applications')
 export class ApplicationsController {
     constructor(
