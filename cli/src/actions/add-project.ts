@@ -31,12 +31,11 @@ export const addProject = async () => {
     try {
         startSpinner("Cargados aplicaciones del servidor");
         let res = await http.get<{ id: string, domain: string, name: string, framework: string, running_on: string, runtime_environment: string }[]>("cli/applications");
-        
         if (res.data.length == 0){
             console.log("Primero debe crear aplicaciones en el servidor");
             process.exit(0);
         }
-
+        stopSpinner("Aplicaciones cargadas", "✔");
         let r: {
             app: { id: string, domain: string, name: string, framework: string, running_on: string, runtime_environment: string },
             location: string,
@@ -73,7 +72,7 @@ export const addProject = async () => {
                 domain: r.app.domain,
                 name: r.app.name,
                 location: r.location,
-                include: r.include.split(",").map(x => x.trim()).filter(x => x.length == 0)
+                include: r.include.split(",").map(x => x.trim()).filter(x => x.length > 0)
             }
         })
 
