@@ -15,7 +15,7 @@ export const addProject = async () => {
     } else if (servers.length == 1){
         server = servers[0];
     } else {
-        let result: { server: IServer } = await inquirer.prompt({ name: "app", message: "Selecciones el servidor", type: "list", choices: servers.map(x => { 
+        let result: { server: IServer } = await inquirer.prompt({ name: "server", message: "Selecciones el servidor", type: "list", choices: servers.map(x => { 
             return {
                 name: x.url,
                 value: x
