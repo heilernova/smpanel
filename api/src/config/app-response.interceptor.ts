@@ -1,10 +1,13 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
+import { APP_CONFIG } from './init';
 import { parseBody } from './parse-body';
+
 @Injectable()
 export class AppResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    context.switchToHttp().getResponse<Response>().setHeader('X-App-version', APP_CONFIG.version);
     context.switchToHttp().getResponse<Response>().setHeader('X-Robots-Tag', 'noindex');
     context.switchToHttp().getResponse<Response>().setHeader('robots', 'noindex');
     context.switchToHttp().getResponse<Response>().setHeader('Disallow', '/');
