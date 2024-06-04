@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IUser, IUserCreate, IUserDbRow, IUSerUpdate, UserStatus } from '@app/models/interfaces/users.interfaces';
 import { ConnectionDbService } from '@app/common/connection-db';
-import { capitalize } from '@app/common/utils';
+import { capitalize, convertToSlug } from '@app/common/utils';
 import { hashSync } from 'bcrypt';
 import { isEmail } from 'class-validator';
 
@@ -50,12 +50,14 @@ export class UsersService {
         return (await this._db.delete('users', ['id = $1', [id]])).rowCount == 1;
     }
 
-    async emailAndUsername(email: string, username: string, userId?: string): Promise<{ email: boolean, username: boolean }> {
-        let sql: string = 'select (select count(*) = 1 from users where email = lower($1)), (select count(*) = 1 from users where lower(username) = lower($1))';
+    async emailAndUsernameValid(email: string, username: string, userId?: string): Promise<{ email: boolean, username: boolean }> {
+        let sql: string = 'select (select count(*) = 0 from users where email = lower($1)), (select count(*) = 0 from users where lower(username) = lower($2))';
+        let params: any[] = [email, username];
         if (userId){
-            'select (select count(*) = 1 from users where email = lower($1) and id <> $3), (select count(*) = 1 from users where lower(username) = lower($2) and id <> $3)';
+            sql = 'select (select count(*) = 0 from users where email = lower($1) and id <> $3), (select count(*) = 0 from users where lower(username) = lower($2) and id <> $3)';
+            params.push(userId);
         }
-        const [emailValid, usernameValid] = (await this._db.query(sql, [email, username], true)).rows[0];
+        const [emailValid, usernameValid] = (await this._db.query(sql, params, true)).rows[0];
         return {
             email: emailValid,
             username: usernameValid

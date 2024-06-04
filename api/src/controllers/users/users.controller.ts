@@ -32,7 +32,7 @@ export class UsersController {
     @Post()
     @RequirePermissions(Permission.USERS_CREATE)
     async create(@Body() body: UserCreateDto){
-        let { email, username } = await this._users.emailAndUsername(body.email, body.username);
+        let { email, username } = await this._users.emailAndUsernameValid(body.email, body.username);
         if (!email || !username){
             let sms: string
             if (email == username) sms = 'El correo electrónico y el nombre de usuario ya están en uso.';
