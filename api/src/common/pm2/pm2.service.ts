@@ -63,16 +63,18 @@ export class Pm2Service {
 
         if (app.startup_file && existsSync(join(app.location, app.startup_file))){
             if (process){
-                this.reload(app.id, app.env);
+                this.reload(processName, app.env);
             } else {
-                this.start(app.location, app.startup_file, app.id, app.env);
+                this.start(app.location, app.startup_file, processName, app.env);
             }
     
             process = this.getAll().find(x => x.name == processName);
             if (process){
                 return process.pm2_env.status;
+            } else {
+                return "errored";
             }
         }
-        throw new Error("No se ha definido el archivo de arranque");
+        throw new Error("No se ha definido el archivo de arranque:  " + join(app.location, app.startup_file));
     }
 }
