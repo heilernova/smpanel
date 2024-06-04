@@ -1,8 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Response } from 'express';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { APP_CONFIG } from './init';
-import { parseBody } from './parse-body';
 
 @Injectable()
 export class AppResponseInterceptor implements NestInterceptor {
@@ -11,11 +10,6 @@ export class AppResponseInterceptor implements NestInterceptor {
     context.switchToHttp().getResponse<Response>().setHeader('X-Robots-Tag', 'noindex');
     context.switchToHttp().getResponse<Response>().setHeader('robots', 'noindex');
     context.switchToHttp().getResponse<Response>().setHeader('Disallow', '/');
-    if (context.switchToHttp().getRequest<Request>().url.startsWith('/media')){
-      return next.handle();
-    }
-    return next.handle().pipe(map(value => {
-      return parseBody(value, context.switchToHttp().getResponse<Response>().statusCode);
-    }));
+    return next.handle();
   }
 }
