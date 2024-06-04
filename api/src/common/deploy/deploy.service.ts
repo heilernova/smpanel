@@ -1,7 +1,7 @@
 import { Dirent, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { Injectable } from '@nestjs/common';
 import { IApplication } from '@app/models';
-import extract from 'extract-zip';
+import * as extract from 'extract-zip';
 import { join } from 'path';
 import { execSync } from 'node:child_process';
 import { Pm2Process, Pm2Service } from '../pm2';
