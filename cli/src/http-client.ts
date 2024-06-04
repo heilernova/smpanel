@@ -29,7 +29,6 @@ export class HttpClient {
             }
             axios({ url, method, headers, data: body  })
             .then(res => {
-                res.data = res.data.data;
                 resolve(res)
             })
             .catch(err => {
