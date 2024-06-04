@@ -1,9 +1,10 @@
-import { GetSession, Session } from '@app/auth';
+import { AuthGuard, GetSession, Session } from '@app/auth';
 import { DeployService } from '@app/common/deploy';
 import { ApplicationsService, IApplication } from '@app/models';
-import { Body, Controller, FileTypeValidator, HttpException, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, HttpException, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+@UseGuards(AuthGuard)
 @Controller('cli/deploy')
 export class CliDeployController {
     constructor(
