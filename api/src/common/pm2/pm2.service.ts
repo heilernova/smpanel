@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { join } from 'path';
-
+import * as pm2 from 'pm2';
 
 export interface Pm2Process {
     pm_id: number,
@@ -47,7 +47,20 @@ export class Pm2Service {
 
     reload(value: string | number, env?: { [key: string]: string }): void {
         if (env){
-            execSync(`pm2 reload ${value} --update-env`, { env: env as any });
+            pm2.connect(err => {
+                if (err){
+                    pm2.disconnect();
+                    return;
+                }
+                pm2.reload(value, err => {
+                    if (err){
+                        pm2.disconnect();
+                        return;
+                    }
+                    pm2.disconnect();
+                })
+            })
+            // execSync(`pm2 reload ${value} --update-env`, { env: env as any });
         } else {
             execSync(`pm2 reload ${value}`);
         }
