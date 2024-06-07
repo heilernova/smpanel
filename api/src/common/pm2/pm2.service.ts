@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import * as pm2 from 'pm2';
 
 export interface Pm2Process {
     pm_id: number,
@@ -46,21 +45,16 @@ export class Pm2Service {
     }
 
     reload(value: string | number, env?: { [key: string]: string }): void {
+        if (typeof value == 'string'){
+            let process = this.getAll().find(x => x.name == value);
+            if (process){
+                value = process.pid;
+            } else {
+                return;
+            }
+        }
         if (env){
-            pm2.connect(err => {
-                if (err){
-                    pm2.disconnect();
-                    return;
-                }
-                pm2.reload(value, err => {
-                    if (err){
-                        pm2.disconnect();
-                        return;
-                    }
-                    pm2.disconnect();
-                })
-            })
-            // execSync(`pm2 reload ${value} --update-env`, { env: env as any });
+            execSync(`pm2 reload ${value} --update-env`, { env: env as any });
         } else {
             execSync(`pm2 reload ${value}`);
         }
@@ -76,7 +70,7 @@ export class Pm2Service {
 
         if (app.startup_file && existsSync(join(app.location, app.startup_file))){
             if (process){
-                this.reload(processName, app.env);
+                this.reload(process.pid, app.env);
             } else {
                 this.start(app.location, app.startup_file, processName, app.env);
             }
