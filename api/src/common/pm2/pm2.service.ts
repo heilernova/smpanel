@@ -37,26 +37,26 @@ export class Pm2Service {
     }
 
     start(path: string, script: string, name: string, env: { [key: string]: string }): void {
-        execSync(`pm2 start ${script} --name="${name}"`, { cwd: path, env: env as any });
+        execSync(`pm2 start ${script} --name=${name}`, { cwd: path, env: env as any });
     }
 
     stop(value: string | number): void {
         execSync(`pm2 stop ${value}`);
     }
 
-    reload(value: string | number, env?: { [key: string]: string }): void {
+    reload(value: string | number, path: string, env?: { [key: string]: string }): void {
         if (typeof value == 'string'){
             let process = this.getAll().find(x => x.name == value);
             if (process){
-                value = process.pid;
+                value = process.pm_id;
             } else {
                 return;
             }
         }
         if (env){
-            execSync(`pm2 reload ${value} --update-env`, { env: env as any });
+            execSync(`pm2 reload ${value} --update-env`, { cwd: path, env: env as any });
         } else {
-            execSync(`pm2 reload ${value}`);
+            execSync(`pm2 reload ${value}`, { cwd: path });
         }
     }
 
@@ -70,7 +70,7 @@ export class Pm2Service {
 
         if (app.startup_file && existsSync(join(app.location, app.startup_file))){
             if (process){
-                this.reload(process.pid, app.env);
+                this.reload(process.pm_id, app.location, app.env);
             } else {
                 this.start(app.location, app.startup_file, processName, app.env);
             }
