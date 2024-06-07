@@ -19,7 +19,7 @@ export const login = async () => {
     let http = getHttpClient();
 
     try {
-        let url: string = `${data.server}/sign-in`
+        let url: string = `${data.server}/api/sign-in`
         let rest = await http.post<{ name: string, role: string, token: string }>(url, { hostname: os.hostname(), username: data.username, password: data.password });
         save({ server: {
             url: data.server,

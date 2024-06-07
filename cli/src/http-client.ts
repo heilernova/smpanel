@@ -22,7 +22,7 @@ export class HttpClient {
         return new Promise<AxiosResponse<R, any>>((resolve, reject) => {
             let headers: { [key: string]: string } | undefined;
             if (this._server){
-                url = `${this._server.url}/${url}`;
+                url = `${this._server.url}/api/${url}`;
                 headers = {
                     "app-token": this._server.token
                 }
