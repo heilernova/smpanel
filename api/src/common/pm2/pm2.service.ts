@@ -37,7 +37,7 @@ export class Pm2Service {
     }
 
     start(path: string, script: string, name: string, env: { [key: string]: string }): void {
-        execSync(`pm2 start ${script} --name=${name}`, { cwd: path, env: env as any });
+        execSync(`pm2 start ${script} --name=${name}`, { cwd: path, env: { ...process.env, ...env } });
     }
 
     stop(value: string | number): void {
@@ -54,9 +54,9 @@ export class Pm2Service {
             }
         }
         if (env){
-            execSync(`pm2 reload ${value} --update-env`, { cwd: path, env: env as any });
+            execSync(`pm2 reload ${value} --update-env`, { env: { ...process.env, ...env } });
         } else {
-            execSync(`pm2 reload ${value}`, { cwd: path });
+            execSync(`pm2 reload ${value}`);
         }
     }
 
